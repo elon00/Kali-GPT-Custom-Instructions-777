@@ -1,0 +1,210 @@
+# KaliGPT README — Complete Guide (English)
+
+This README explains how to work with **KaliGPT** — a structured, repeatable interaction playbook to get actionable cybersecurity, OSINT, and developer-tooling outputs. Save this as `README.md` in your project and use the provided templates and prompts whenever you need KaliGPT to produce scripts, playbooks, detection rules, OSINT pipelines, or reports.
+
+> **Important:** You must have explicit authorization for any offensive testing. If you do not, KaliGPT will only provide high-level, defensive, and educational guidance.
+
+---
+
+## Contents
+1. Purpose  
+2. Quick Start  
+3. Mandatory request checklist (copy/paste)  
+4. How to write a request — TASK templates (with examples)  
+5. Output structure — what you will receive  
+6. Fast iteration commands  
+7. VS Code usage & setup (extensions + auth)  
+8. Security, privacy, and data handling (must read)  
+9. Useful quick prompts (copy/paste)  
+10. FAQ & troubleshooting  
+11. Licensing & contact
+
+---
+
+## 1) Purpose
+KaliGPT provides a safe, standardized way to request technical cybersecurity and OSINT work: recon plans, pentest playbooks, detection rules (Sigma/YARA/Suricata), scripts (Python/Bash/PowerShell), OSINT pipelines, and more — delivered in a reproducible format so you can act and validate results reliably.
+
+---
+
+## 2) Quick Start
+1. Copy the **Checklist block** (section 3) and paste it at the top of your prompt.  
+2. Fill the fields and add a `TASK:` describing exactly what you want (examples in section 4).  
+3. Send the prompt — KaliGPT will return a step-by-step deliverable (scripts, playbook, rules, report, etc.).
+
+---
+
+## 3) Mandatory request checklist (paste this at the top of every request)
+AUTH: [Yes — I am authorized] / [No]
+OBJECTIVE: Short goal (e.g., "internal network pentest", "YARA rule for ransomware X", "OSINT profile for example.com")
+SCOPE: Targets (IPs, domains, accounts) or "see attached"
+ENV: (windows/linux/mac/cloud/on-prem)
+CONSTRAINTS: (time, noisy vs stealthy, tool bans, safe_mode)
+DELIVERABLE_FORMAT: (script, playbook, sigma rule, step-by-step guide, report)
+PRIORITY: (high/med/low)
+
+yaml
+Copy code
+> If `AUTH` is not `Yes`, KaliGPT will restrict outputs to defensive/high-level guidance and refuse offensive instructions.
+
+---
+
+## 4) How to write a request — TASK templates (copy/paste and edit)
+
+### A. Tactical Task (script/tool)
+AUTH: Yes
+OBJECTIVE: Fetch MX, SPF, DKIM for domains in domains.csv and save as JSONL
+SCOPE: domains.csv (100 domains)
+ENV: linux (python 3.11)
+CONSTRAINTS: rate-limit 2 req/s
+DELIVERABLE_FORMAT: python script + README + unit tests
+PRIORITY: med
+
+TASK: Generate a Python script that:
+
+reads domains.csv,
+
+queries MX/SPF/DKIM using dnspython,
+
+saves newline-delimited JSON (JSONL),
+
+respects rate limit 2 req/s,
+
+includes CLI args, README usage, and simple unit tests.
+
+shell
+Copy code
+
+### B. Engagement Plan (pentest / red team)
+AUTH: Yes
+OBJECTIVE: internal network pentest
+SCOPE: 10.0.0.0/24
+ENV: windows domain
+CONSTRAINTS: blue-team aware, non-destructive
+DELIVERABLE_FORMAT: full pentest playbook + reporting template
+PRIORITY: high
+
+TASK: Produce a step-by-step engagement plan: recon commands, safe scanning configuration (nmap/profile), allowed exploit list (if any), post-exploitation checks, persistence/cleanup guidance, detection-avoidance notes, and a final report template.
+
+shell
+Copy code
+
+### C. OSINT Pipeline
+AUTH: Yes
+OBJECTIVE: Subdomain discovery + cert transparency monitoring
+SCOPE: example.com
+ENV: linux
+CONSTRAINTS: no credentialed access
+DELIVERABLE_FORMAT: pipeline script (python) + JSON schema
+PRIORITY: low
+
+TASK: Build an OSINT pipeline to aggregate subdomains from crt.sh, CertStream, and bruteforce; deduplicate, timestamp results, and output JSONL with fields: domain, discovered_subdomain, source, timestamp.
+
+yaml
+Copy code
+
+---
+
+## 5) Output structure — what KaliGPT always returns
+When you use the checklist + TASK, KaliGPT will return:
+
+1. **Executive summary** — 2–3 lines of what was produced.  
+2. **Actionable items** — numbered steps you can run immediately.  
+3. **Commands / scripts** — ready-to-run code with placeholders and safe defaults.  
+4. **Detection & mitigation** — how defenders detect or block these actions and how to harden.  
+5. **Risks & ethics** — legal cautions and likely side effects.  
+6. **Validation tests** — how to verify success (unit tests, sample logs, test events).  
+7. **Report / artifact** — final report template or machine-readable output (Markdown/CSV/JSON/Sigma/YARA).
+
+---
+
+## 6) Fast iteration commands
+Use one-line directives to request changes:
+
+- `TUNE: reduce false positives` — adjust thresholds and indicators in detection rules.  
+- `SIMPLIFY: produce minimal script` — return a lightweight version (no extras).  
+- `EXPAND: add SIEM detection for Splunk/ELK` — include queries for specified SIEM.  
+- `VERIFY: here are sample logs` — paste redacted logs; KaliGPT will analyze and update rules.
+
+You don’t need to repeat the full checklist in the same session — you can say `continue from last` — but include it when changing scope or targets.
+
+---
+
+## 7) VS Code usage & setup (short guide)
+
+### Recommended extensions
+- Official **OpenAI/ChatGPT** extension (if available).  
+- **GitHub Copilot** for inline coding assistance (may require subscription).  
+- Third-party chat extensions (CodeGPT, Genie) if you prefer local UI features.
+
+### Install via CLI
+```bash
+# Example (change extension ids to current ones)
+code --install-extension openai.chatgpt
+code --install-extension GitHub.copilot
+code --install-extension tomoki1207.code-gpt
+Authentication & best practice
+Some extensions require an OpenAI API key. Store API keys in environment variables or VS Code secret store — never paste keys into public chat content.
+
+Use the extension's side panel or command palette (Ctrl/Cmd+Shift+P) to open the assistant.
+
+Select code blocks and use “Ask ChatGPT” or paste the checklist + TASK into the chat.
+
+8) Security, privacy & data handling — non-negotiable rules
+Authorization required: Offensive testing requires explicit authorization (AUTH: Yes). KaliGPT will refuse or limit outputs for unauthorized requests.
+
+Never paste secrets/PII: Do not paste real credentials, private keys, or personal data. Use placeholders like {{PASSWORD}}.
+
+Redact before uploading: If you share logs or files, redact sensitive fields beforehand. KaliGPT can help with redaction templates.
+
+No unlawful assistance: KaliGPT will not assist with law evasion, creating malware for harm, mass surveillance, or other illegal activities. Authorized defensive and testing activities are supported.
+
+Check extension trust: Only install trusted VS Code extensions (review publisher, downloads, ratings, privacy policy).
+
+9) Useful quick prompts (ready to copy/paste)
+Start a pentest plan
+yaml
+Copy code
+AUTH: Yes
+OBJECTIVE: internal network pentest (blue team aware)
+SCOPE: 10.0.0.0/24
+ENV: windows domain
+CONSTRAINTS: non-destructive
+DELIVERABLE_FORMAT: full pentest playbook + compliance-safe exploit list
+PRIORITY: high
+
+TASK: Produce engagement plan now.
+Build a detection rule
+vbnet
+Copy code
+AUTH: Yes
+OBJECTIVE: detect suspicious PowerShell download-and-execute patterns
+SCOPE: enterprise endpoints
+ENV: Windows, ELK
+CONSTRAINTS: avoid false positives from admin tools
+DELIVERABLE_FORMAT: Sigma rule + Splunk query
+TASK: Create rule and provide 5 synthetic test events to validate it.
+Generate a script
+vbnet
+Copy code
+AUTH: Yes
+OBJECTIVE: enumerate subdomains using crt.sh and bruteforce
+SCOPE: example.com
+ENV: linux
+CONSTRAINTS: rate-limit 5 req/s
+DELIVERABLE_FORMAT: python script + README
+TASK: produce script, include concurrency control and output JSONL
+10) FAQ & Troubleshooting
+Q: What if AUTH: No?
+A: KaliGPT will provide only defensive or high-level conceptual guidance — no step-by-step offensive procedures.
+
+Q: Will KaliGPT run commands for me?
+A: No — KaliGPT provides code, commands, and instructions. Execution must be performed by you on authorized systems.
+
+Q: Can I send logs for rule tuning?
+A: Yes — but redact PII/credentials before sending. KaliGPT can provide redaction templates.
+
+Q: What output formats are available?
+A: Markdown, JSON, YAML, Python/Bash/PowerShell scripts, Sigma/YARA rules, Suricata-compatible signatures, and CSV/JSONL data outputs.
+
+11) License & contact
+This README is for internal, authorized use. KaliGPT is a controlled helper — it will not assist in unlawful activities. Use this README and KaliGPT only for authorized security testing, defensive research, and ethical OSINT.
